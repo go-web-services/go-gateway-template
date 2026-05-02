@@ -1,0 +1,34 @@
+services:
+  go-gateway-template:
+    container_name: go-gateway-template
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    env_file:
+      - .env
+    networks:
+      - go-network
+
+  proxy:
+    container_name: proxy
+    build:
+      context: ./proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/www/certbot:/var/www/certbot:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - go-gateway-template
+    networks:
+      - go-network
+
+networks:
+  go-network:
+    external: true
+    driver: bridge

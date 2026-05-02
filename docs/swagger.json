@@ -1,0 +1,905 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Gateway template exposing user, auth, and event HTTP APIs",
+        "title": "Go Gateway Template API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/api",
+    "paths": {
+        "/v1/auth/activate-account": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Confirm user email with activation token.",
+                "parameters": [
+                    {
+                        "description": "Send Activate Account Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ActivateAccountInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ActivateAccountOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/activate-account/resend": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Resend activation email for pending users.",
+                "parameters": [
+                    {
+                        "description": "Send Resend Activation Email Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ResendActivationEmailInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ResendActivationEmailOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/forgot-password/check-token": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Check if forgot password token is valid and not expired.",
+                "parameters": [
+                    {
+                        "description": "Send Check Forgot Password Token Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.CheckForgotPasswordTokenInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.CheckForgotPasswordTokenOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/forgot-password/finish": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Update user password (finish forgot password flow).",
+                "parameters": [
+                    {
+                        "description": "Send Forgot Password Finish Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordFinishInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordFinishOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/forgot-password/start": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Generate password reset token and expiration date (start forgot password flow).",
+                "parameters": [
+                    {
+                        "description": "Send Forgot Password Start Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordStartInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordStartOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/google-sso/callback": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Handle Google SSO callback.",
+                "parameters": [
+                    {
+                        "description": "Send Google SSO Callback Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.GoogleSSOCallbackInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.GoogleSSOCallbackOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/google-sso/get-link": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get Google SSO authentication link.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.GoogleSSOGetLinkOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Perform user login.",
+                "parameters": [
+                    {
+                        "description": "Send Login Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.LoginInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.LoginOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/logout": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Perform user logout.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.LogoutOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/otp/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login with OTP.",
+                "parameters": [
+                    {
+                        "description": "Send OTP Login Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.OTPLoginInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.OTPLoginOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/otp/signup": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Request OTP for signup.",
+                "parameters": [
+                    {
+                        "description": "Send OTP Signup Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.OTPSignupInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.OTPSignupOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/signup": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Create a new user account.",
+                "parameters": [
+                    {
+                        "description": "Send Signup Request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.SignupInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.SignupOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/events/send": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Track an analytics event",
+                "parameters": [
+                    {
+                        "description": "Event payload from the client",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.EventSendRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.EventSendOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/me": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get current authenticated user information.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UserDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/providers/list": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List user's auth providers.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.ListAuthProvidersOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/update": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user information.",
+                "parameters": [
+                    {
+                        "description": "Update user request",
+                        "name": "SendRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UpdateUserInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UpdateUserOutputDTO"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "enum.UserStatus": {
+            "type": "string",
+            "enum": [
+                "active",
+                "inactive",
+                "pending",
+                "frozen"
+            ],
+            "x-enum-varnames": [
+                "StatusActive",
+                "StatusInactive",
+                "StatusPending",
+                "StatusFrozen"
+            ]
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ActivateAccountInputDTO": {
+            "type": "object",
+            "required": [
+                "activation_token"
+            ],
+            "properties": {
+                "activation_token": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ActivateAccountOutputDTO": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UserDTO"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.AuthProviderDTO": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.CheckForgotPasswordTokenInputDTO": {
+            "type": "object",
+            "required": [
+                "forgot_password_token"
+            ],
+            "properties": {
+                "forgot_password_token": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.CheckForgotPasswordTokenOutputDTO": {
+            "type": "object",
+            "properties": {
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.EventSendOutputDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.EventSendRequestDTO": {
+            "type": "object",
+            "required": [
+                "distinct_id",
+                "name",
+                "occurred_at",
+                "payload"
+            ],
+            "properties": {
+                "distinct_id": {
+                    "type": "string",
+                    "example": "anon_6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+                },
+                "message_id": {
+                    "description": "MessageID is optional; when set it must be a UUID (idempotency key). Omit entirely or use a real UUID — not Swagger’s placeholder \"string\".",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "page_viewed"
+                },
+                "occurred_at": {
+                    "type": "string",
+                    "example": "2026-04-12T10:30:00.123Z"
+                },
+                "payload": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "session_id": {
+                    "type": "string",
+                    "example": "sess_01j8xyz"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordFinishInputDTO": {
+            "type": "object",
+            "required": [
+                "cf_turnstile_response",
+                "forgot_password_token",
+                "new_password"
+            ],
+            "properties": {
+                "cf_turnstile_response": {
+                    "type": "string"
+                },
+                "delete_sessions": {
+                    "type": "boolean"
+                },
+                "forgot_password_token": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "new_password": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordFinishOutputDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordStartInputDTO": {
+            "type": "object",
+            "required": [
+                "cf_turnstile_response",
+                "email"
+            ],
+            "properties": {
+                "cf_turnstile_response": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 320
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ForgotPasswordStartOutputDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.GoogleSSOCallbackInputDTO": {
+            "type": "object",
+            "required": [
+                "code",
+                "state"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "maxLength": 512
+                },
+                "state": {
+                    "type": "string",
+                    "maxLength": 512
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.GoogleSSOCallbackOutputDTO": {
+            "type": "object",
+            "properties": {
+                "is_new_user": {
+                    "type": "boolean"
+                },
+                "user": {
+                    "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UserDTO"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.GoogleSSOGetLinkOutputDTO": {
+            "type": "object",
+            "properties": {
+                "auth_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ListAuthProvidersOutputDTO": {
+            "type": "object",
+            "properties": {
+                "auth_providers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.AuthProviderDTO"
+                    }
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.LoginInputDTO": {
+            "type": "object",
+            "required": [
+                "cf_turnstile_response",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "cf_turnstile_response": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 320
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.LoginOutputDTO": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UserDTO"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.LogoutOutputDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.OTPLoginInputDTO": {
+            "type": "object",
+            "required": [
+                "cf_turnstile_response",
+                "email",
+                "otp"
+            ],
+            "properties": {
+                "cf_turnstile_response": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 320
+                },
+                "otp": {
+                    "type": "string",
+                    "maxLength": 6
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.OTPLoginOutputDTO": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UserDTO"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.OTPSignupInputDTO": {
+            "type": "object",
+            "required": [
+                "cf_turnstile_response",
+                "email"
+            ],
+            "properties": {
+                "cf_turnstile_response": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 320
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.OTPSignupOutputDTO": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UserDTO"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ResendActivationEmailInputDTO": {
+            "type": "object",
+            "required": [
+                "cf_turnstile_response",
+                "email"
+            ],
+            "properties": {
+                "cf_turnstile_response": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 320
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.ResendActivationEmailOutputDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.SignupInputDTO": {
+            "type": "object",
+            "required": [
+                "cf_turnstile_response",
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "cf_turnstile_response": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 320
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 64
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.SignupOutputDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.UpdateUserInputDTO": {
+            "type": "object",
+            "properties": {
+                "new_password": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "old_password": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 64
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.UpdateUserOutputDTO": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/github_com_go-web-services_go-gateway-template_internal_dto.UserDTO"
+                }
+            }
+        },
+        "github_com_go-web-services_go-gateway-template_internal_dto.UserDTO": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "has_password": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/enum.UserStatus"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

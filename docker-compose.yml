@@ -1,0 +1,22 @@
+services:
+  go-gateway-template:
+    container_name: go-gateway-template
+    build:
+      context: .
+      dockerfile: debug/Dockerfile
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
+    command: go run cmd/app/main.go
+    volumes:
+      - .:/app
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    env_file:
+      - .env
+    networks:
+      - go-network
+
+networks:
+  go-network:
+    external: true
+    driver: bridge

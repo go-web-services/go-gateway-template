@@ -1,76 +1,120 @@
-# Go gateway template
+# go-gateway-template
 
-Minimal HTTP gateway that proxies **authentication** and **user** flows to [go-service-user](https://github.com/go-web-services/go-service-user) and **analytics events** to [go-service-event](https://github.com/go-web-services/go-service-event) via their published clients. You can fork this as a starting point for other domains.
+`github.com/go-web-services/go-gateway-template`
 
-Route layout and behavior match the auth/user surface from the historical [`lmk-gateway-website`](https://github.com/Lomank123/lmk-gateway-website) tree (initial `SetupRouter` from commit `7a33a02`, with Turnstile on OTP routes as in `b2320e8`). Handlers use the same `go-web-services/go-web-platform` error patterns as the current gateway refactor.
+Minimal HTTP gateway that proxies authentication and user flows to [go-service-user](https://github.com/go-web-services/go-service-user) and analytics events to [go-service-event](https://github.com/go-web-services/go-service-event) via their published clients. Includes an nginx reverse proxy config and Cloudflare Turnstile captcha on sensitive OTP and auth routes. Fork this as a starting point for other domain gateways; replace the module path and adjust constants before use.
 
-## Module name
+---
 
-Go module: `github.com/go-web-services/go-gateway-template`. After you copy the template, replace it everywhere (including `go.mod` and imports) with your real module path, then run:
+## Responsibilities
 
-```bash
-gocheck
-```
+- Proxy all auth and user-management requests to go-service-user.
+- Proxy analytics event submissions to go-service-event.
+- Enforce Cloudflare Turnstile captcha on signup, OTP, and password-reset routes.
+- Apply CORS with a configurable allow-list.
+- Attach `user_id` to outbound event calls when a valid session is present (`UserInfoMiddleware`).
+- Provide an nginx reverse proxy configuration for production deployments.
+
+---
 
 ## Configuration
 
-| Variable | Purpose |
-|----------|---------|
-| `APP_PORT` | HTTP listen port |
-| `APP_ENV` | Environment (`dev` / production values per platform) |
-| `ALLOW_ORIGINS` | Comma-separated CORS origins |
-| `USER_SERVICE_URL` | Base URL for the user service |
-| `EVENT_SERVICE_URL` | Base URL for the event / analytics service |
-| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret (captcha on selected routes) |
-| `AUTH_FINGERPRINT_COOKIE_DOMAIN` | Cookie `Domain` for fingerprint / SSO state cookies |
-| `AUTH_FINGERPRINT_COOKIE_EXPIRATION_SEC` | Fingerprint cookie max-age |
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `APP_PORT` | HTTP listen port | — |
+| `APP_ENV` | Environment (`dev` / `prod`) | — |
+| `ALLOW_ORIGINS` | Comma-separated CORS origins | — |
+| `USER_SERVICE_URL` | Base URL for go-service-user | — |
+| `EVENT_SERVICE_URL` | Base URL for go-service-event | — |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret (captcha validation) | — |
+| `AUTH_FINGERPRINT_COOKIE_DOMAIN` | Cookie `Domain` for fingerprint / SSO state cookies | — |
+| `AUTH_FINGERPRINT_COOKIE_EXPIRATION_SEC` | Fingerprint cookie max-age in seconds | — |
 
-Set `internal/constants/auth_constants.go` **`AuthProduct`** to the product id your user service expects (default in this template is `main`). Set **`EventProjectID`** in `internal/constants/event_constants.go` for your event service project scope.
+Two constants also need to match your deployment:
+
+- `AuthProduct` in `internal/constants/auth_constants.go` — product ID sent to the user service (default: `main`).
+- `EventProjectID` in `internal/constants/event_constants.go` — project scope sent to the event service.
+
+After forking, replace the module path `github.com/go-web-services/go-gateway-template` everywhere (`go.mod` and all imports), then run `gocheck`.
+
+---
 
 ## Run locally
 
 ```bash
+git clone git@github.com:go-web-services/go-gateway-template.git
+cd go-gateway-template
 cp .env.sample .env
-# set USER_SERVICE_URL, TURNSTILE_SECRET_KEY, GITHUB_TOKEN for private modules if needed
+# Set USER_SERVICE_URL, EVENT_SERVICE_URL, TURNSTILE_SECRET_KEY, GITHUB_TOKEN
 go run ./cmd/app/main.go
 ```
 
+---
+
 ## Docker
 
-- **Dev**: `docker compose -f docker-compose.yml up` (hot reload via `debug/Dockerfile`; service name `go-gateway-template`).
-- **Prod**: `docker compose -f docker-compose-prod.yml up --build` builds binary `go-gateway-template` from the root `Dockerfile`.
+- **Dev** (hot reload via `debug/Dockerfile`):
+  ```bash
+  docker compose -f docker-compose.yml up
+  ```
+- **Prod**:
+  ```bash
+  docker compose -f docker-compose-prod.yml up --build
+  ```
 
-Ensure reverse proxy upstreams use the compose service hostname `go-gateway-template` and the same `APP_PORT` as in `.env`.
+Ensure your reverse proxy upstreams use the compose service hostname `go-gateway-template` and the same `APP_PORT` value as in `.env`.
 
-## API surface (`/api/v1`)
+For Docker builds with private Go modules, pass `GITHUB_TOKEN` as a build arg (see `args` in the compose files). Locally, set `GOPRIVATE=github.com/go-web-services/*`.
 
-**Auth** (`/api/v1/auth`):
+---
 
-- `POST /login` — captcha
-- `POST /logout` — optional auth middleware chain (session + fingerprint)
-- `POST /signup` — captcha
-- `POST /activate-account`
-- `POST /activate-account/resend` — captcha
-- `POST /forgot-password/start` — captcha
-- `POST /forgot-password/finish` — captcha
-- `POST /forgot-password/check-token`
-- `POST /google-sso/get-link`
-- `POST /google-sso/callback`
-- `POST /otp/signup` — captcha
-- `POST /otp/login` — captcha
+## API surface
 
-**Users** (`/api/v1/users`; require auth):
+### Auth (`/api/v1/auth`)
 
-- `GET /me`
-- `POST /update`
-- `POST /providers/list`
+| Method | Path | Notes |
+|--------|------|-------|
+| `POST` | `/login` | Captcha |
+| `POST` | `/logout` | Session + fingerprint middleware |
+| `POST` | `/signup` | Captcha |
+| `POST` | `/activate-account` | — |
+| `POST` | `/activate-account/resend` | Captcha |
+| `POST` | `/forgot-password/start` | Captcha |
+| `POST` | `/forgot-password/finish` | Captcha |
+| `POST` | `/forgot-password/check-token` | — |
+| `POST` | `/google-sso/get-link` | — |
+| `POST` | `/google-sso/callback` | — |
+| `POST` | `/otp/signup` | Captcha |
+| `POST` | `/otp/login` | Captcha |
 
-**Events** (`/api/v1/events`):
+### Users (`/api/v1/users`) — require auth
 
-- `POST /send` — optional auth (`UserInfoMiddleware` only); sets `user_id` on the event when the session is valid
+| Method | Path | Notes |
+|--------|------|-------|
+| `GET` | `/me` | Returns current user |
+| `POST` | `/update` | Update user profile |
+| `POST` | `/providers/list` | List auth providers |
 
-Swagger UI is wired through [go-web-platform](https://github.com/go-web-services/go-web-platform) (`/swagger` when enabled for your environment).
+### Events (`/api/v1/events`)
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `POST` | `/send` | Optional auth; sets `user_id` when session is valid |
+
+Swagger UI is available at `/swagger` when enabled for your environment (wired through go-web-platform).
+
+---
 
 ## Private dependencies
 
-`go-service-user` and `go-service-event` may be private. For Docker builds, pass `GITHUB_TOKEN` as in compose `args`. Locally, configure git/`GOPRIVATE` as in `.env.sample`.
+This gateway imports `go-service-user/pkg/client`, `go-service-event/pkg/client`, and `go-web-platform`, all of which may be private. Configure access:
+
+```bash
+export GOPRIVATE='github.com/go-web-services/*'
+```
+
+---
+
+## Author
+
+[Lomank](https://lomank.com)

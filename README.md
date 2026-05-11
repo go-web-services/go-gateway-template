@@ -1,4 +1,6 @@
-# go-gateway-template
+Visit main page: [https://github.com/go-web-services](https://github.com/go-web-services)
+
+# Go Web Services - go-gateway-template
 
 `github.com/go-web-services/go-gateway-template`
 

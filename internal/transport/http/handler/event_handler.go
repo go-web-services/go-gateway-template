@@ -69,7 +69,7 @@ func (h *eventHandler) SendEventV1(c *gin.Context) {
 		}
 	}
 
-	// ClientIP: behind nginx, Gin uses X-Forwarded-For (see proxy/nginx.conf). When the gateway is hit directly
+	// ClientIP: behind a reverse proxy, Gin uses X-Forwarded-For. When the gateway is hit directly
 	// from the host in local Docker, the address is typically the Docker bridge/gateway (e.g. 172.19.0.1), not the browser's public IP.
 	ip := c.ClientIP()
 	var ipPtr *string

@@ -14,22 +14,6 @@ services:
     networks:
       - go-network
 
-  proxy:
-    container_name: proxy
-    restart: unless-stopped
-    build:
-      context: ./proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/www/certbot:/var/www/certbot:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-    depends_on:
-      - go-gateway-template
-    networks:
-      - go-network
-
 networks:
   go-network:
     external: true

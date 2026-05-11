@@ -2,7 +2,7 @@
 
 `github.com/go-web-services/go-gateway-template`
 
-Minimal HTTP gateway that proxies authentication and user flows to [go-service-user](https://github.com/go-web-services/go-service-user) and analytics events to [go-service-event](https://github.com/go-web-services/go-service-event) via their published clients. Includes an nginx reverse proxy config and Cloudflare Turnstile captcha on sensitive OTP and auth routes. Fork this as a starting point for other domain gateways; replace the module path and adjust constants before use.
+Minimal HTTP gateway that proxies authentication and user flows to [go-service-user](https://github.com/go-web-services/go-service-user) and analytics events to [go-service-event](https://github.com/go-web-services/go-service-event) via their published clients. Includes Cloudflare Turnstile captcha on sensitive OTP and auth routes. Production nginx lives in [go-web-infrastructure](https://github.com/go-web-services/go-web-infrastructure) (`proxy/`). Fork this as a starting point for other domain gateways; replace the module path and adjust constants before use.
 
 ---
 
@@ -13,8 +13,6 @@ Minimal HTTP gateway that proxies authentication and user flows to [go-service-u
 - Enforce Cloudflare Turnstile captcha on signup, OTP, and password-reset routes.
 - Apply CORS with a configurable allow-list.
 - Attach `user_id` to outbound event calls when a valid session is present (`UserInfoMiddleware`).
-- Provide an nginx reverse proxy configuration for production deployments.
-
 ---
 
 ## Configuration
@@ -62,7 +60,7 @@ go run ./cmd/app/main.go
   docker compose -f docker-compose-prod.yml up --build
   ```
 
-Ensure your reverse proxy upstreams use the compose service hostname `go-gateway-template` and the same `APP_PORT` value as in `.env`.
+Ensure your reverse proxy upstreams use the compose service hostname `go-gateway-template` and the same `APP_PORT` value as in `.env` (see `go-web-infrastructure` for nginx compose and sample configs).
 
 For Docker builds with private Go modules, pass `GITHUB_TOKEN` as a build arg (see `args` in the compose files). Locally, set `GOPRIVATE=github.com/go-web-services/*`.
 
